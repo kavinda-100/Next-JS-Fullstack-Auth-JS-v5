@@ -19,7 +19,7 @@ const CardHeaders = ({ label }: CardHeaderProps) => {
           poppinsFont.className
         )}
       >
-        🔐 AuthJS
+        🔐 AuthJS<span className="text-sm">{" "}v5</span>
       </h1>
       <p className=" text-muted-foreground text-sm md:text-lg">{label}</p>
     </div>
