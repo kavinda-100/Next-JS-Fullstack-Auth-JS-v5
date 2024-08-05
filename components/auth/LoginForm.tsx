@@ -45,9 +45,9 @@ const LoginForm = () => {
         try {
             const result = await LogInAction(data)
             console.log(result)
-            if (result.message) {
+            if (result?.message) {
                 setError(result.message);
-            } else if (result.success) {
+            } else if (result?.success) {
                 const successMessage = String(result.success === typeof "boolean" ? "Logged in successfully" : result.success)
                 setSuccess(successMessage);
                 navigateTo(DEFAULT_LOGIN_REDIRECT)

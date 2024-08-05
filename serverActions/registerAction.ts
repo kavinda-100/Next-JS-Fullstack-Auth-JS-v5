@@ -8,8 +8,10 @@ import prismaDB from "@/lib/prismaDB";
 import {findUserByEmail} from "@/lib/findUser";
 import {generateVerificationToken} from "@/lib/tokens";
 import {sendVerificationEmail} from "@/lib/email.utils";
+import {conditionalError} from "@/lib/utils";
+import {AuthActionReturnType} from "@/types";
 
-export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>)  => {
+export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>): Promise<AuthActionReturnType>  => {
     try{
         const validateFields = ZodSignUpValidation.safeParse(data);
         if(validateFields.success) {
@@ -51,6 +53,6 @@ export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>) 
         else return {message: ZodCustomErrorMessages(validateFields.error.errors)}
     }
     catch (e : any) {
-        return e.message ? e.message : "something went wrong"
+        return conditionalError(e);
     }
 }

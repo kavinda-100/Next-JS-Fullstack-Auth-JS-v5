@@ -8,8 +8,10 @@ import {AuthError} from "next-auth";
 import {generateVerificationToken} from "@/lib/tokens";
 import {findUserByEmail} from "@/lib/findUser";
 import {sendVerificationEmail} from "@/lib/email.utils";
+import {conditionalError} from "@/lib/utils";
+import {AuthActionReturnTypeWithBoolean} from "@/types";
 
-export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>)=> {
+export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>): Promise<AuthActionReturnTypeWithBoolean> => {
     try{
         //validate the fields
         const validateFields = ZodLoginValidation.safeParse(data);
@@ -49,7 +51,7 @@ export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>)=> {
             })
             //if the result has an error
             if(result instanceof AuthError){
-                console.log("result", result.type)
+                // console.log("result", result.type)
                 switch(result.type){
                     case "CredentialsSignin": {
                         return {message: "Invalid credentials"}
@@ -69,20 +71,8 @@ export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>)=> {
             return {message: ZodCustomErrorMessages(validateFields.error.errors)}
         }
     }
-    catch (e : any | AuthError) {
-        //if the error is an AuthError that return from signIn function
-        if(e instanceof AuthError) {
-            switch(e.type){
-                case "CredentialsSignin": {
-                    return {message: "Invalid credentials"}
-                }
-                default:{
-                    return {message: "something went wrong when sign in please try again"}
-                }
-            }
-        }
-        //if the error is a general error
-        return {message: e.message ? e.message : "something went wrong" }
+    catch (e : any) {
+        return conditionalError(e);
 
     }
 }
