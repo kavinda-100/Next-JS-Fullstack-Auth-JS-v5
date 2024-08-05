@@ -1,7 +1,29 @@
-import NextAuth from "next-auth"
+import NextAuth, {type DefaultSession} from "next-auth"
 import authConfig from "./auth.config"
 import { PrismaAdapter } from "@auth/prisma-adapter"
-import prismaDB from "./lib/prismaDB";
+import prismaDB from "@/lib/prismaDB";
+import {findUserById} from "@/lib/findUser";
+import {UserRole} from "@prisma/client";
+// import { JWT } from "@auth/core/jwt"
+
+//extend the ser type
+export type ExtendedUser = DefaultSession["user"] & {
+    role: UserRole
+}
+
+//extend the session to add user and role
+declare module "next-auth" {
+    interface Session{
+        user: ExtendedUser
+    }
+}
+
+//extend the jwt to add a role
+declare module "@auth/core/jwt" {
+    interface JWT{
+        role?: UserRole
+    }
+}
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks:{
@@ -16,11 +38,31 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                  * */
                 session.user.id = token.sub
             }
+            if(token.role && session.user){
+                /**
+                 * Add the user role to the session which in token.role
+                 * by doing that we can access the user role in the session which mean we can access
+                 * the user role in both sever and client side/component
+                 * because by default session not include the user role
+                 * we have to get it first from the token by calling to database
+                 * (it's done in the jwt callback below)
+                 * */
+                session.user.role = token.role
+            }
             console.log("session", session)
             console.log("session-token", token)
             return session
         },
         async jwt({token}){
+            //check if token has user id(sub) if not it means user has log out.
+            if(!token.sub) return token
+            //find user by id
+            const user = await findUserById(token.sub)
+            //if user didn't found return token
+            if(!user) return token
+            //add user role to token
+            token.role = user.role
+            // return token
             return token
         }
     },
