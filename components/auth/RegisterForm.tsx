@@ -28,15 +28,16 @@ const RegisterForm = () => {
     });
 
     const onSubmit = (data: z.infer<typeof ZodSignUpValidation>) => {
+        setError("");
+        setSuccess("");
         startTransition(() => {
             RegisterAction(data)
                 .then((m) => {
-                    setSuccess(m.success);
-                    setError(m.error);
+                    setSuccess(m?.success);
+                    setError(m?.message);
                 })
                 .catch((e) => {
-                    setError(e.error);
-                    setSuccess(undefined);
+                    setError(e.message);
                 });
         })
     };

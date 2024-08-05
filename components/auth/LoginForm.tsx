@@ -1,10 +1,11 @@
 "use client";
 
 import React from "react";
+import z from "zod";
+import {useRouter} from "next/navigation";
 import CardWrapper from "@/components/CardWrapper";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import z from "zod";
 import {ZodLoginValidation} from "@/zod/FormValidation";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
@@ -12,10 +13,15 @@ import {Button} from "@/components/ui/button";
 import FormError from "@/components/FormError";
 import FormSuccess from "@/components/FormSuccess";
 import {LogInAction} from "@/serverActions/logInAction";
+import {DEFAULT_LOGIN_REDIRECT} from "@/routesHandeler";
 
 const LoginForm = () => {
+    const router = useRouter()
+    const navigateTo = (path: string) => {
+        router.push(path);
+    }
     // react transition
-    const [isPending, startTransition] = React.useTransition();
+    const [isPending, setIsPending] = React.useState(false);
     // form state
     const [error, setError] = React.useState<string | undefined>("");
     const [success, setSuccess] = React.useState<string | undefined>("");
@@ -27,18 +33,27 @@ const LoginForm = () => {
         resolver: zodResolver(ZodLoginValidation)
     });
 
-    const onSubmit = (data: z.infer<typeof ZodLoginValidation>) => {
-        startTransition(() => {
-            LogInAction(data)
-                .then((m) => {
-                    setSuccess(m.success);
-                    setError(m.error);
-                })
-                .catch((e) => {
-                    setError(e.error);
-                    setSuccess(undefined);
-                });
-        })
+    const onSubmit = async (data: z.infer<typeof ZodLoginValidation>) => {
+        setError("");
+        setSuccess("");
+        setIsPending(true);
+        try {
+            const result = await LogInAction(data)
+            console.log(result)
+            if (result.message) {
+                setError(result.message);
+            } else if (result.success) {
+                setSuccess("Logged in successfully");
+                navigateTo(DEFAULT_LOGIN_REDIRECT)
+            }
+
+        }
+        catch (e: any | Error) {
+            setError(e.message ? e.message : "something went wrong")
+        }
+        finally {
+            setIsPending(false);
+        }
     };
 
     return (
