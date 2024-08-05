@@ -2,7 +2,7 @@
 
 import React from "react";
 import z from "zod";
-import {useRouter} from "next/navigation";
+import {useRouter, useSearchParams} from "next/navigation";
 import CardWrapper from "@/components/CardWrapper";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
@@ -16,7 +16,12 @@ import {LogInAction} from "@/serverActions/logInAction";
 import {DEFAULT_LOGIN_REDIRECT} from "@/routesHandeler";
 
 const LoginForm = () => {
+    // set error if it in URL
+    const searchParams = useSearchParams();
+    const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already in used with different provider" : undefined;
+    // router
     const router = useRouter()
+    // navigate to
     const navigateTo = (path: string) => {
         router.push(path);
     }
@@ -105,7 +110,7 @@ const LoginForm = () => {
                         />
                     </div>
 
-                    <FormError message={error} />
+                    <FormError message={error || urlError} />
                     <FormSuccess message={success} />
                     <Button className="w-full" type={"submit"} disabled={isPending}>LogIn</Button>
 

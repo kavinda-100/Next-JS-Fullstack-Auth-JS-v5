@@ -1,5 +1,5 @@
 import NextAuth, {type DefaultSession} from "next-auth"
-import authConfig from "./auth.config"
+import authConfig from "@/auth.config"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import prismaDB from "@/lib/prismaDB";
 import {findUserById} from "@/lib/findUser";
@@ -26,6 +26,25 @@ declare module "@auth/core/jwt" {
 }
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
+    pages: {
+        signIn: "/auth/login",
+        error: "/auth/error",
+    },
+    events: {
+        async linkAccount({user}) {
+            try{
+                await prismaDB.user.update({
+                    where: {id: user.id},
+                    data: {
+                        emailVerified: new Date()
+                    }
+                })
+            }
+            catch (e){
+                console.log("linkAccount", e)
+            }
+        }
+    },
     callbacks:{
         async signIn({user}){
             // console.log("user", user)
