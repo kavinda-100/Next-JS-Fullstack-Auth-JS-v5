@@ -3,9 +3,9 @@
  * these routes do not require authentication
  * @type {string[]}
  * */
-export const publicRoutes = [
+export const publicRoutes: string[] = [
     "/"
-    ]
+]
 
 /**
  * This file contains all the public routes of the application
@@ -14,7 +14,7 @@ export const publicRoutes = [
  * @type {string[]}
  * */
 
-export const authRoutes = [
+export const authRoutes: string[] = [
     "/auth/login",
     "/auth/register",
 
@@ -25,19 +25,11 @@ export const authRoutes = [
  *  that are start with this prefix are used for API authentication purposes
  * @type {string}
  * */
-export const apiAuthPrefix = "api/auth"
+export const apiAuthPrefix: string = "/api/auth"
 
 /**
  * default redirect path after login
  * @type {string}
  * */
-export const DEFAULT_LOGIN_REDIRECT = "/settings"
+export const DEFAULT_LOGIN_REDIRECT: string = "/settings"
 
-/**
- * This file contains all the private routes of the application
- * these routes only accessible after login user
- * @type {string[]}
- * */
-export const protectedRoutes = [
-    "/settings",
-]

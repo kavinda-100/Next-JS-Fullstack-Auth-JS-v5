@@ -27,6 +27,20 @@ declare module "@auth/core/jwt" {
 
 export const { handlers, auth, signIn, signOut } = NextAuth({
     callbacks:{
+        async signIn({user}){
+            // console.log("user", user)
+            // // get user by id
+            // const existingUser = await findUserById(user?.id || "")
+            // /**
+            //  * blocking user not exit or user exist but not verified there email
+            //  * in this case we can return false to block the user from sign-in
+            //  * */
+            // if(!existingUser || !existingUser.emailVerified) {
+            //     return false
+            // }
+            //if user exists and verifies
+            return true
+        },
         async session({session, token}){
             //check if session has user and token has sub
             if(session.user && token.sub){
@@ -49,8 +63,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                  * */
                 session.user.role = token.role
             }
-            console.log("session", session)
-            console.log("session-token", token)
+            // console.log("session", session)
+            // console.log("session-token", token)
             return session
         },
         async jwt({token}){

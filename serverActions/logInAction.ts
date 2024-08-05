@@ -4,7 +4,6 @@ import z from "zod";
 import {ZodLoginValidation} from "@/zod/FormValidation";
 import {ZodCustomErrorMessages} from "@/zod";
 import {signIn} from "@/auth";
-import {DEFAULT_LOGIN_REDIRECT} from "@/routesHandeler";
 import {AuthError} from "next-auth";
 
 export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>)=> {
@@ -16,15 +15,25 @@ export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>)=> {
             //extract the email and password
             const {email, password} = validateFields.data;
             //sign in the user
-            const result: AuthError = await signIn("credentials", {
+            const result = await signIn("credentials", {
                 email: email,
                 password: password,
                 redirect: false // prevent automatic redirect
             })
             //if the result has an error
-            if (result?.type === "CredentialsSignin") {
-                //return the error
-                return {message: "Invalid credentials"}
+            if(result instanceof AuthError){
+                console.log("result", result.type)
+                switch(result.type){
+                    case "CredentialsSignin": {
+                        return {message: "Invalid credentials"}
+                    }
+                    case "AccessDenied": {
+                        return {message: "Access denied! verify your email first"}
+                    }
+                    default:{
+                        return {message: "something went wrong when sign in please try again"}
+                    }
+                }
             }
             //return success
             return {success: true}

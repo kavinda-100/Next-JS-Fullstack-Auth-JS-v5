@@ -1,13 +1,17 @@
 import type { NextAuthConfig } from "next-auth"
 import Credentials from "next-auth/providers/credentials"
+import Github from "next-auth/providers/github"
+import Google from "next-auth/providers/google"
+
 import {ZodLoginValidation} from "@/zod/FormValidation";
 import {findUserByEmail} from "@/lib/findUser";
 import bcryptjs from "bcryptjs";
-import {ZodError} from "zod";
 
 // Notice this is only an object, not a full Auth.js instance
 export default {
     providers: [
+        Github,
+        Google,
         Credentials({
             name: "credentials",
             async authorize(credentials) {
