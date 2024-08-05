@@ -46,17 +46,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
         }
     },
     callbacks:{
-        async signIn({user}){
+        async signIn({user, account}){
+            // allow OAuth sign-in without email verification
+            if(account?.provider !== "credentials") return true
             // console.log("user", user)
-            // // get user by id
-            // const existingUser = await findUserById(user?.id || "")
-            // /**
-            //  * blocking user not exit or user exist but not verified there email
-            //  * in this case we can return false to block the user from sign-in
-            //  * */
-            // if(!existingUser || !existingUser.emailVerified) {
-            //     return false
-            // }
+            // get user by id
+            const existingUser = await findUserById(user?.id || "")
+            /**
+             * blocking user not exit or user exist but not verified there email
+             * in this case we can return false to block the user from sign-in
+             * */
+            if(!existingUser || !existingUser?.emailVerified) {
+                return false
+            }
             //if user exists and verifies
             return true
         },

@@ -6,6 +6,8 @@ import {ZodCustomErrorMessages} from "@/zod";
 import bcryptjs from "bcryptjs";
 import prismaDB from "@/lib/prismaDB";
 import {findUserByEmail} from "@/lib/findUser";
+import {generateVerificationToken} from "@/lib/tokens";
+import {sendVerificationEmail} from "@/lib/email.utils";
 
 export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>)  => {
     try{
@@ -31,7 +33,19 @@ export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>) 
             })
 
             //TODO: // send email verification
-            return {success: "Email Sent"}
+            const verificationToken = await generateVerificationToken(email);
+            //if the token is not generated
+            if(!verificationToken) return {message: "Failed to generate verification token"}
+            //send the email
+            const result = await sendVerificationEmail(
+                verificationToken.email,
+                verificationToken.token,
+                name
+            );
+            //if the email is not sent
+            if(!result) return {message: "Failed to send email"}
+            //return success
+            return {success: "Confirmation Email Sent"}
 
         }
         else return {message: ZodCustomErrorMessages(validateFields.error.errors)}

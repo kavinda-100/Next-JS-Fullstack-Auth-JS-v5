@@ -48,7 +48,8 @@ const LoginForm = () => {
             if (result.message) {
                 setError(result.message);
             } else if (result.success) {
-                setSuccess("Logged in successfully");
+                const successMessage = String(result.success === typeof "boolean" ? "Logged in successfully" : result.success)
+                setSuccess(successMessage);
                 navigateTo(DEFAULT_LOGIN_REDIRECT)
             }
 
