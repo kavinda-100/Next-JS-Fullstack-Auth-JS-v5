@@ -1,6 +1,6 @@
-import prismaDB from "./prismaDB";
+import prismaDB from "../prismaDB";
 
-export async function getVerificationTokenByEmail(email: string) {
+export async function findEmailVerificationTokenByEmail(email: string) {
     try {
         return await prismaDB.verificationToken.findFirst({
             where: {
@@ -14,7 +14,7 @@ export async function getVerificationTokenByEmail(email: string) {
     }
 }
 
-export async function getVerificationTokenByToken(token: string) {
+export async function findEmailVerificationTokenByToken(token: string) {
     try {
         return await prismaDB.verificationToken.findFirst({
             where: {

@@ -5,13 +5,13 @@ import {ZodLoginValidation} from "@/zod/FormValidation";
 import {ZodCustomErrorMessages} from "@/zod";
 import {signIn} from "@/auth";
 import {AuthError} from "next-auth";
-import {generateVerificationToken} from "@/lib/tokens";
-import {findUserByEmail} from "@/lib/findUser";
+import {generateEmailVerificationToken} from "@/lib/tokens";
+import {findUserByEmail} from "@/lib/prismaUtils/findUser";
 import {sendVerificationEmail} from "@/lib/email.utils";
 import {conditionalError} from "@/lib/utils";
-import {AuthActionReturnTypeWithBoolean} from "@/types";
+import {AuthActionReturnType, AuthActionReturnTypeWithBoolean} from "@/types";
 
-export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>): Promise<AuthActionReturnTypeWithBoolean> => {
+export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>): Promise<AuthActionReturnType> => {
     try{
         //validate the fields
         const validateFields = ZodLoginValidation.safeParse(data);
@@ -28,7 +28,7 @@ export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>): Pro
             //if the user has not verified the email
             if(!existingUser.emailVerified) {
                 //generate a new verification token
-                const verificationToken = await generateVerificationToken(email);
+                const verificationToken = await generateEmailVerificationToken(email);
                 //if the token is not generated
                 if(!verificationToken) return {message: "Failed to generate verification token"}
                 //send the email
@@ -65,7 +65,7 @@ export const LogInAction = async (data: z.infer<typeof ZodLoginValidation>): Pro
                 }
             }
             //return success
-            return {success: true}
+            return {success: "Logged in successfully"}
         }
         else {
             return {message: ZodCustomErrorMessages(validateFields.error.errors)}

@@ -2,24 +2,20 @@
 
 import React from "react";
 import z from "zod";
-import {useRouter, useSearchParams} from "next/navigation";
-import Link from "next/link"
+import {useRouter} from "next/navigation";
 import CardWrapper from "@/components/CardWrapper";
 import {useForm} from "react-hook-form";
 import {zodResolver} from "@hookform/resolvers/zod";
-import {ZodLoginValidation} from "@/zod/FormValidation";
+import {ZodResetResetPasswordSendEmail} from "@/zod/FormValidation";
 import {Form, FormControl, FormField, FormItem, FormLabel, FormMessage} from "@/components/ui/form";
 import {Input} from "@/components/ui/input";
 import {Button} from "@/components/ui/button";
 import FormError from "@/components/FormError";
 import FormSuccess from "@/components/FormSuccess";
-import {LogInAction} from "@/serverActions/logInAction";
+import  {sendResetPasswordEmail} from "@/serverActions/resetPassword";
 import {DEFAULT_LOGIN_REDIRECT} from "@/routesHandeler";
 
-const LoginForm = () => {
-    // set error if it in URL
-    const searchParams = useSearchParams();
-    const urlError = searchParams.get("error") === "OAuthAccountNotLinked" ? "Email already in used with different provider" : undefined;
+const ResetForm = () => {
     // router
     const router = useRouter()
     // navigate to
@@ -35,26 +31,26 @@ const LoginForm = () => {
     /**
      * zodResolver is a function that takes a Zod schema and returns a resolver function that can be used with react-hook-form.
      */
-    const formHook = useForm<z.infer<typeof ZodLoginValidation>>({
-        resolver: zodResolver(ZodLoginValidation)
+    const formHook = useForm<z.infer<typeof ZodResetResetPasswordSendEmail>>({
+        resolver: zodResolver(ZodResetResetPasswordSendEmail)
     });
 
-    const onSubmit = async (data: z.infer<typeof ZodLoginValidation>) => {
+    const onSubmit = async (data: z.infer<typeof ZodResetResetPasswordSendEmail>) => {
         setError("");
         setSuccess("");
         setIsPending(true);
         try {
-            const result = await LogInAction(data)
+            const result = await sendResetPasswordEmail(data)
             console.log(result)
             if (result?.message) {
                 setError(result.message);
-            } else if (result?.success) {
-                setSuccess(result.success);
-                navigateTo(DEFAULT_LOGIN_REDIRECT)
+            }
+            else if (result?.success) {
+                setSuccess(result?.success);
             }
 
         }
-        catch (e: any | Error) {
+        catch (e: any) {
             setError(e.message ? e.message : "something went wrong")
         }
         finally {
@@ -64,10 +60,10 @@ const LoginForm = () => {
 
     return (
         <CardWrapper
-            headerLabel="Welcome Back"
-            backButtonLabel="Don't have an account?"
-            backButtonHref="/auth/register"
-            showSocialMedia
+            headerLabel="Frogot Your Password?"
+            backButtonLabel="Back to LogIn"
+            backButtonHref="/auth/login"
+            showSocialMedia={false}
         >
             <Form {...formHook}>
                 <form onSubmit={formHook.handleSubmit(onSubmit)}
@@ -91,37 +87,11 @@ const LoginForm = () => {
                                 </FormItem>
                             )}
                         />
-                        <FormField
-                            control={formHook.control}
-                            name={"password"}
-                            render={({field, }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="email">Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            type={"password"}
-                                            placeholder={"********"}
-                                            disabled={isPending}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                    <Button
-                                        className="px-0 font-normal"
-                                        size={"sm"}
-                                        variant={"link"}
-                                        asChild>
-                                        <Link href="/auth/reset" >Forgot Password?</Link>
-                                    </Button>
-                                </FormItem>
-                            )}
-                        />
-
                     </div>
 
-                    <FormError message={error || urlError} />
+                    <FormError message={error} />
                     <FormSuccess message={success} />
-                    <Button className="w-full" type={"submit"} disabled={isPending}>LogIn</Button>
+                    <Button className="w-full" type={"submit"} disabled={isPending}>Send Email</Button>
 
                 </form>
             </Form>
@@ -129,4 +99,4 @@ const LoginForm = () => {
     );
 };
 
-export default LoginForm;
+export default ResetForm;

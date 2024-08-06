@@ -4,7 +4,7 @@ import Github from "next-auth/providers/github"
 import Google from "next-auth/providers/google"
 
 import {ZodLoginValidation} from "@/zod/FormValidation";
-import {findUserByEmail} from "@/lib/findUser";
+import {findUserByEmail} from "./lib/prismaUtils/findUser";
 import bcryptjs from "bcryptjs";
 
 // Notice this is only an object, not a full Auth.js instance

@@ -5,8 +5,8 @@ import {ZodSignUpValidation} from "@/zod/FormValidation";
 import {ZodCustomErrorMessages} from "@/zod";
 import bcryptjs from "bcryptjs";
 import prismaDB from "@/lib/prismaDB";
-import {findUserByEmail} from "@/lib/findUser";
-import {generateVerificationToken} from "@/lib/tokens";
+import {findUserByEmail} from "../lib/prismaUtils/findUser";
+import {generateEmailVerificationToken} from "@/lib/tokens";
 import {sendVerificationEmail} from "@/lib/email.utils";
 import {conditionalError} from "@/lib/utils";
 import {AuthActionReturnType} from "@/types";
@@ -35,7 +35,7 @@ export const RegisterAction = async (data: z.infer<typeof ZodSignUpValidation>):
             })
 
             //TODO: // send email verification
-            const verificationToken = await generateVerificationToken(email);
+            const verificationToken = await generateEmailVerificationToken(email);
             //if the token is not generated
             if(!verificationToken) return {message: "Failed to generate verification token"}
             //send the email

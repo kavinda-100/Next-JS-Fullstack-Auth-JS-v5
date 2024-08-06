@@ -1,15 +1,15 @@
 "use server"
 
 import prismaDB from "@/lib/prismaDB";
-import { findUserByEmail} from "@/lib/findUser";
-import { getVerificationTokenByToken} from "@/lib/verificationToken";
+import { findUserByEmail} from "@/lib/prismaUtils/findUser";
+import { findEmailVerificationTokenByToken} from "@/lib/prismaUtils/findEmailVerificationTokens";
 import {conditionalError} from "@/lib/utils";
 import {AuthActionReturnType} from "@/types";
 
 export const newEmailVerification = async (token: string): Promise<AuthActionReturnType> => {
     try{
         //get the verification token from the database
-        const existingToken = await getVerificationTokenByToken(token);
+        const existingToken = await findEmailVerificationTokenByToken(token);
         //if the token does not exist, return message
         if (!existingToken) {
             return { message: "Token does not exit" };
