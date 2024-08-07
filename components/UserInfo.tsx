@@ -1,7 +1,7 @@
 import React from 'react';
 import {ExtendedUser} from "@/auth";
 import {Card, CardContent, CardHeader} from "@/components/ui/card";
-import {cn} from "@/lib/utils";
+import {Badge} from "@/components/ui/badge";
 
 type UserInfoProps = {
     user?: ExtendedUser
@@ -33,12 +33,11 @@ const UserInfo = ({user, label} :UserInfoProps) => {
                 </div>
                 <div className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-sm">
                     <p className="text-balck text-pretty font-semibold">Two Factor Authentication:</p>
-                    <p className={cn("font-normal text-sm truncate font-mono p-1 rounded-md", {
-                        "bg-green-500": user?.isTwoFactorEnabled,
-                        "bg-slate-200": !user?.isTwoFactorEnabled
-                    })}>
-                        {user?.isTwoFactorEnabled ? "Enabled" : "Disabled"}
-                    </p>
+                    <Badge variant={
+                        user?.isOAuthAccount ? "success" : user?.isTwoFactorEnabled ? "success" : "destructive"
+                    }>
+                        {user?.isTwoFactorEnabled ? "Enabled" : user?.isOAuthAccount ? "Enabled" : "Disabled"}
+                    </Badge>
                 </div>
             </CardContent>
         </Card>

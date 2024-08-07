@@ -27,6 +27,7 @@ model User {
   emailVerified DateTime?
   image         String?
   isTwoFactorEnabled Boolean? @default(false)
+  isOAuthAccount Boolean? @default(false)
   twoFactorCinfirmation TwoFactorConfirmation?
   accounts           Account[]
 

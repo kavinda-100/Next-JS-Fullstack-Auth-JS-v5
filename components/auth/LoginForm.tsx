@@ -59,7 +59,7 @@ const LoginForm = () => {
             }
 
         }
-        catch (e: any | Error) {
+        catch (e: any) {
             setError(e.message ? e.message : "something went wrong")
         }
         finally {

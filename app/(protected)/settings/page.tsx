@@ -33,7 +33,7 @@ const Page = () => {
     if(!user) {
         window.location.reload()
     }
-    console.log("OAuth ", user?.isOAuth)
+    console.log("OAuth ", user?.isOAuthAccount)
     const [isSubmitting, setIsSubmitting] = React.useState(false);
     const [error, setError] = React.useState<string | undefined>("");
     const [success, setSuccess] = React.useState<string | undefined>("");
@@ -77,7 +77,6 @@ const Page = () => {
                 <div className="flex space-x-4 items-center justify-center">
                     <IoSettingsOutline className="w-6 h-6"/>
                     <p className="font-bold font-sans text-lg">Settings</p>
-                    <p>{user?.isOAuth ? "OAuth" : "credential"}</p>
                 </div>
            </CardHeader>
             <CardContent>
@@ -104,25 +103,30 @@ const Page = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={formHook.control}
-                                name={"email"}
-                                render={({field, }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="email">Email</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type={"email"}
-                                                placeholder={"example@gmail.com"}
-                                                disabled={isSubmitting}
-                                                className="border shadow-sm"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            {
+                                !user?.isOAuthAccount && (
+                                    <FormField
+                                        control={formHook.control}
+                                        name={"email"}
+                                        render={({field, }) => (
+                                            <FormItem>
+                                                <FormLabel htmlFor="email">Email</FormLabel>
+                                                <FormControl>
+                                                    <Input
+                                                        {...field}
+                                                        type={"email"}
+                                                        placeholder={"example@gmail.com"}
+                                                        disabled={isSubmitting}
+                                                        className="border shadow-sm"
+                                                    />
+                                                </FormControl>
+                                                <FormMessage />
+                                            </FormItem>
+                                        )}
+                                    />
+                                )
+                            }
+
                             <FormField
                                 control={formHook.control}
                                 name={"role"}
@@ -147,67 +151,73 @@ const Page = () => {
                                     </FormItem>
                                 )}
                             />
-                            <FormField
-                                control={formHook.control}
-                                name={"password"}
-                                render={({field, }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="email">Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type={"password"}
-                                                placeholder={"********"}
-                                                disabled={isSubmitting}
-                                                className="border shadow-sm"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                            {
+                                !user?.isOAuthAccount && (
+                                    <>
+                                        <FormField
+                                            control={formHook.control}
+                                            name={"password"}
+                                            render={({field, }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="email">Password</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            type={"password"}
+                                                            placeholder={"********"}
+                                                            disabled={isSubmitting}
+                                                            className="border shadow-sm"
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
 
-                            <FormField
-                                control={formHook.control}
-                                name={"confirmPassword"}
-                                render={({field, }) => (
-                                    <FormItem>
-                                        <FormLabel htmlFor="email">Confirm Password</FormLabel>
-                                        <FormControl>
-                                            <Input
-                                                {...field}
-                                                type={"password"}
-                                                placeholder={"********"}
-                                                disabled={isSubmitting}
-                                                className="border shadow-sm"
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
-                            <FormField
-                                control={formHook.control}
-                                name={"isTwoFactorEnabled"}
-                                render={({field, }) => (
-                                    <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
-                                        <div className="space-x-5">
-                                            <FormLabel htmlFor="email">TwoFactor Authentication</FormLabel>
-                                            <FormDescription>
-                                                Enable TwoFactor Authentication For Your Account
-                                            </FormDescription>
-                                        </div>
-                                        <FormControl>
-                                            <Switch
-                                                checked={field.value}
-                                                onCheckedChange={field.onChange}
-                                                disabled={isSubmitting}
-                                            />
-                                        </FormControl>
-                                        <FormMessage />
-                                    </FormItem>
-                                )}
-                            />
+                                        <FormField
+                                            control={formHook.control}
+                                            name={"confirmPassword"}
+                                            render={({field, }) => (
+                                                <FormItem>
+                                                    <FormLabel htmlFor="email">Confirm Password</FormLabel>
+                                                    <FormControl>
+                                                        <Input
+                                                            {...field}
+                                                            type={"password"}
+                                                            placeholder={"********"}
+                                                            disabled={isSubmitting}
+                                                            className="border shadow-sm"
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                        <FormField
+                                            control={formHook.control}
+                                            name={"isTwoFactorEnabled"}
+                                            render={({field, }) => (
+                                                <FormItem className="flex flex-row items-center justify-between rounded-lg border p-3 shadow-md">
+                                                    <div className="space-x-5">
+                                                        <FormLabel htmlFor="email">TwoFactor Authentication</FormLabel>
+                                                        <FormDescription>
+                                                            Enable TwoFactor Authentication For Your Account
+                                                        </FormDescription>
+                                                    </div>
+                                                    <FormControl>
+                                                        <Switch
+                                                            checked={field.value}
+                                                            onCheckedChange={field.onChange}
+                                                            disabled={isSubmitting}
+                                                        />
+                                                    </FormControl>
+                                                    <FormMessage />
+                                                </FormItem>
+                                            )}
+                                        />
+                                    </>
+                                )
+                            }
                         </div>
 
                         <FormError message={error} />

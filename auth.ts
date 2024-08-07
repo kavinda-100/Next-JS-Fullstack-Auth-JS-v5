@@ -5,14 +5,13 @@ import prismaDB from "@/lib/prismaDB";
 import {findUserById} from "@/lib/prismaUtils/findUser";
 import { findTwoFactorConfirmationByUserID} from "@/lib/prismaUtils/findTwoFactorTokens";
 import {UserRole} from "@prisma/client";
-import {findAccountByUserId} from "./lib/prismaUtils/findAccount";
 // import { JWT } from "@auth/core/jwt"
 
 //extend the ser type
 export type ExtendedUser = DefaultSession["user"] & {
     role: UserRole
     isTwoFactorEnabled: boolean
-    isOAuth: boolean
+    isOAuthAccount: boolean
 }
 
 //extend the session to add user and role
@@ -27,7 +26,7 @@ declare module "@auth/core/jwt" {
     interface JWT{
         role?: UserRole
         isTwoFactorEnabled?: boolean
-        isOAuth?: boolean
+        isOAuthAccount?: boolean
     }
 }
 
@@ -42,7 +41,8 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 await prismaDB.user.update({
                     where: {id: user.id},
                     data: {
-                        emailVerified: new Date()
+                        emailVerified: new Date(),
+                        isOAuthAccount: true
                     }
                 })
             }
@@ -112,7 +112,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                 session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
                 session.user.name = token.name as string
                 session.user.email = token.email as string
-                session.user.isOAuth = token.isOAuth as boolean
+                session.user.isOAuthAccount = token.isOAuthAccount as boolean
             }
             // console.log("session", session)
             // console.log("session-token", token)
@@ -125,11 +125,9 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             const user = await findUserById(token.sub)
             //if user didn't found return token
             if(!user) return token
-
-            //get the user account.
-            const Account = await findAccountByUserId(user.id)
-            //add user role to token
-            token.isOAuth = !!Account || account?.provider === "oauth"
+            //add a user role to token
+            // Set token.isOAuth based on the account provider or the Account retrieved from the database
+            token.isOAuthAccount = user.isOAuthAccount as boolean
             token.role = user.role
             token.isTwoFactorEnabled = user.isTwoFactorEnabled as boolean
             token.name = user.name

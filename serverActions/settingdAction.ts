@@ -31,7 +31,7 @@ export const settingAction = async (data: z.infer<typeof ZodSettingsSchema>): Pr
                 return {message: "Unauthorized"};
             }
             //is user OAuth user
-            if(user?.isOAuth){
+            if(user?.isOAuthAccount){
                 /**
                  * remove password, confirmPassword, isTwoFactorEnabled, email from extractedData
                  * because OAuth user can't change these settings
