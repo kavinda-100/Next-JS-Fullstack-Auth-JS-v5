@@ -1,36 +1,87 @@
-This is a [Next.js](https://nextjs.org/) project bootstrapped with [`create-next-app`](https://github.com/vercel/next.js/tree/canary/packages/create-next-app).
+## Next.js Fullstack project with Auth.JS v5
 
-## Getting Started
-
-First, run the development server:
+Install the dependencies:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+bun install
 ```
+Create a `.env` file in the root of the project and add the following:
 
+> [!TIP]
+> .env.sample file is provided in the root of the project.
+
+```bash
+DATABASE_URL=
+AUTH_SECRET=
+
+AUTH_GOOGLE_ID=
+AUTH_GOOGLE_SECRET=
+
+AUTH_GITHUB_ID=
+AUTH_GITHUB_SECRET=
+
+DOMAIN_NAME="http://localhost:3000"
+
+MY_EMAIL=
+APP_PASSWORD=
+
+DEV_MODE="development" // change to production when deploying
+
+  ```
+
+> [!IMPORTANT]
+> The `DATABASE_URL` is the connection string to your database.
+> use a cloud database like MongoDB Atlas.
+
+> [!IMPORTANT]
+> install the Bun CLI globally to run the project.
+
+### Windows
+```bash
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+### MacOS & Linux
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+### or install it using npm:
+```bash
+npm install -g bun
+```
+run the development server:
+
+```bash
+bun run dev
+```
 Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Used Technologies
+- [Bun.sh](https://bun.sh/)
+- [Next.js](https://nextjs.org/)
+- [Auth.JS v5](https://authjs.dev/)
+- [shadcn ui](https://ui.shadcn.com/)
+- [prisma](https://www.prisma.io/)
+- [MongoDB Atlas](https://www.mongodb.com/atlas)
+- [Tailwind CSS](https://tailwindcss.com/)
+- [React Hook Form](https://react-hook-form.com/)
+- [zod](https://zod.dev/)
 
-This project uses [`next/font`](https://nextjs.org/docs/basic-features/font-optimization) to automatically optimize and load Inter, a custom Google Font.
+## Screenshots
 
-## Learn More
+### LogIn Page
+![Home Page](./assets/login.png)
 
-To learn more about Next.js, take a look at the following resources:
+### Register Page
+![Login Page](./assets/register.png)
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### Settings Page
+![Settings Page](./assets/settings.png)
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js/) - your feedback and contributions are welcome!
+### Admin Page
+![Admin Page](./assets/admin.png)
 
-## Deploy on Vercel
+### client Component Page
+![Client Component Page](./assets/client.png)
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
-
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
+### Server Component Page
+![Server Component Page](./assets/server.png)
