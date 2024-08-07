@@ -4,7 +4,7 @@ import "./globals.css";
 import {cn} from "@/lib/utils";
 import React from "react";
 import {auth} from "@/auth";
-import { SessionProvider} from "next-auth/react";
+import { Toaster } from "@/components/ui/sonner"
 import AuthSessionProvider from "@/components/AuthSessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -29,6 +29,7 @@ export default async function RootLayout({
               )}>
               <main className="max-w-5xl h-screen mx-auto p-2">{children}</main>
               </body>
+              <Toaster />
             </html>
       </AuthSessionProvider>
   );
