@@ -8,7 +8,7 @@ bun install
 Create a `.env` file in the root of the project and add the following:
 
 > [!TIP]
-> .env.sample file is provided in the root of the project.
+> `.env.sample` file is provided in the root of the project.
 
 ```bash
 DATABASE_URL=
