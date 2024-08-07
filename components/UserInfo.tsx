@@ -1,6 +1,6 @@
 import React from 'react';
-import {ExtendedUser} from "@/next-auth";
-import {Card, CardContent, CardHeader} from "./ui/card";
+import {ExtendedUser} from "@/auth";
+import {Card, CardContent, CardHeader} from "@/components/ui/card";
 import {cn} from "@/lib/utils";
 
 type UserInfoProps = {

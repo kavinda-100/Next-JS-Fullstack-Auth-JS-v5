@@ -24,6 +24,7 @@ declare module "next-auth" {
 declare module "@auth/core/jwt" {
     interface JWT{
         role?: UserRole
+        isTwoFactorEnabled?: boolean
     }
 }
 
@@ -105,7 +106,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                  * but only look for session because isTwoFactorEnabled is a boolean field
                  * it can be false.
                  * */
-                session.user.isTwoFactorEnabled = token.isTwoFactorEnabled
+                session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
             }
             // console.log("session", session)
             // console.log("session-token", token)
