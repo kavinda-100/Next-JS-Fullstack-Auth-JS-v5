@@ -5,12 +5,14 @@ import prismaDB from "@/lib/prismaDB";
 import {findUserById} from "@/lib/prismaUtils/findUser";
 import { findTwoFactorConfirmationByUserID} from "@/lib/prismaUtils/findTwoFactorTokens";
 import {UserRole} from "@prisma/client";
+import {findAccountByUserId} from "./lib/prismaUtils/findAccount";
 // import { JWT } from "@auth/core/jwt"
 
 //extend the ser type
 export type ExtendedUser = DefaultSession["user"] & {
     role: UserRole
     isTwoFactorEnabled: boolean
+    isOAuth: boolean
 }
 
 //extend the session to add user and role
@@ -25,6 +27,7 @@ declare module "@auth/core/jwt" {
     interface JWT{
         role?: UserRole
         isTwoFactorEnabled?: boolean
+        isOAuth?: boolean
     }
 }
 
@@ -107,21 +110,30 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                  * it can be false.
                  * */
                 session.user.isTwoFactorEnabled = token.isTwoFactorEnabled as boolean
+                session.user.name = token.name as string
+                session.user.email = token.email as string
+                session.user.isOAuth = token.isOAuth as boolean
             }
             // console.log("session", session)
             // console.log("session-token", token)
             return session
         },
-        async jwt({token}){
+        async jwt({token, account}){
             //check if token has user id(sub) if not it means user has log out.
             if(!token.sub) return token
             //find user by id
             const user = await findUserById(token.sub)
             //if user didn't found return token
             if(!user) return token
+
+            //get the user account.
+            const Account = await findAccountByUserId(user.id)
             //add user role to token
+            token.isOAuth = !!Account || account?.provider === "oauth"
             token.role = user.role
-            token.isTwoFactorEnabeld = user.isTwoFactorEnabled
+            token.isTwoFactorEnabled = user.isTwoFactorEnabled as boolean
+            token.name = user.name
+            token.email = user.email
             // return token
             return token
         }

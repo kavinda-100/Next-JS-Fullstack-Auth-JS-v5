@@ -21,7 +21,7 @@ export default async function RootLayout({
 }>) {
     const session = await auth()
   return (
-      <AuthSessionProvider session={session!}>
+      <AuthSessionProvider session={session}>
             <html lang="en" suppressHydrationWarning>
               <body className={cn(
                   "min-h-screen font-sans antialiased bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
