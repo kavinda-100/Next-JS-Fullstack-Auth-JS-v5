@@ -1,9 +1,11 @@
 import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
-import {cn} from "../lib/utils";
+import {cn} from "@/lib/utils";
 import React from "react";
-import prismaDB from "../lib/prismaDB";
+import {auth} from "@/auth";
+import { SessionProvider} from "next-auth/react";
+import AuthSessionProvider from "@/components/AuthSessionProvider";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -12,19 +14,22 @@ export const metadata: Metadata = {
   description: "Fullstack Next js app with full authentication with AuthJS v5",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
 }>) {
+    const session = await auth()
   return (
-    <html lang="en" suppressHydrationWarning>
-      <body className={cn(
-          "min-h-screen font-sans antialiased bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
-          inter.className
-      )}>
-      <main className=" max-w-5xl h-screen mx-auto p-2">{children}</main>
-      </body>
-    </html>
+      <AuthSessionProvider session={session!}>
+            <html lang="en" suppressHydrationWarning>
+              <body className={cn(
+                  "min-h-screen font-sans antialiased bg-gradient-to-r from-indigo-500 via-purple-500 to-pink-500",
+                  inter.className
+              )}>
+              <main className="max-w-5xl h-screen mx-auto p-2">{children}</main>
+              </body>
+            </html>
+      </AuthSessionProvider>
   );
 }

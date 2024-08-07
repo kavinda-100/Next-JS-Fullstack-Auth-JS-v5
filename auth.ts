@@ -10,6 +10,7 @@ import {UserRole} from "@prisma/client";
 //extend the ser type
 export type ExtendedUser = DefaultSession["user"] & {
     role: UserRole
+    isTwoFactorEnabled: boolean
 }
 
 //extend the session to add user and role
@@ -98,6 +99,14 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
                  * */
                 session.user.role = token.role
             }
+            if(session.user){
+                /**
+                 * does the same thing for isTwoFactorEnabled field.
+                 * but only look for session because isTwoFactorEnabled is a boolean field
+                 * it can be false.
+                 * */
+                session.user.isTwoFactorEnabled = token.isTwoFactorEnabled
+            }
             // console.log("session", session)
             // console.log("session-token", token)
             return session
@@ -111,6 +120,7 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
             if(!user) return token
             //add user role to token
             token.role = user.role
+            token.isTwoFactorEnabeld = user.isTwoFactorEnabled
             // return token
             return token
         }

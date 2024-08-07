@@ -1,22 +1,34 @@
-import {auth, signOut} from "@/auth";
-import {Button} from "@/components/ui/button";
+"use client"
 
-const Page = async () => {
-    const session = await auth()
+import { useUserSession } from "@/hooks/useUserSession"
+
+const Page = () => {
+    const {user, status} = useUserSession()
+
+    if(status === "loading") return <div>loading...</div>
+    if(!user){
+       //refresh the page
+        window.location.reload()
+        console.log("user not found!. has to refresh")
+    }
+
     return (
-        <div>
-            {
-                JSON.stringify(session)
-            }
-            {/* sign out function*/}
-            <form
-                className="mt-4 flex justify-start "
-                action={async ()=>{
-                "use server"
-                await signOut()
-            }}>
-                <Button type={"submit"}>sign out</Button>
-            </form>
+        <div className="flex flex-col gap-5">
+            <p className="text-balck text-pretty">
+                {
+                   user?.name
+                }
+            </p>
+            <p className="text-balck text-pretty">
+                {
+                   user?.email
+                }
+            </p>
+            <p className="text-balck text-pretty">
+                {
+                   user?.role
+                }
+            </p>
 
         </div>
     );
