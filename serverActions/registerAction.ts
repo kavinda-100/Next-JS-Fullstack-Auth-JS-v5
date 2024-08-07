@@ -7,7 +7,7 @@ import bcryptjs from "bcryptjs";
 import prismaDB from "@/lib/prismaDB";
 import {findUserByEmail} from "../lib/prismaUtils/findUser";
 import {generateEmailVerificationToken} from "@/lib/tokens";
-import {sendVerificationEmail} from "@/lib/email.utils";
+import {sendVerificationEmail} from "../lib/emailsUtils/email.utils";
 import {conditionalError} from "@/lib/utils";
 import {AuthActionReturnType} from "@/types";
 

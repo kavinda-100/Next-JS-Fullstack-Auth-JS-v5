@@ -5,7 +5,8 @@ export type AuthActionReturnType = {
     message?: string | undefined;
 }
 
-export type AuthActionReturnTypeWithBoolean = {
-    success?: string | undefined | boolean;
+export type AuthActionReturnTypeWithTwoFactor = {
+    success?: string | undefined;
     message?: string | undefined;
+    twoFactor?: boolean
 }

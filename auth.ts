@@ -2,7 +2,8 @@ import NextAuth, {type DefaultSession} from "next-auth"
 import authConfig from "@/auth.config"
 import { PrismaAdapter } from "@auth/prisma-adapter"
 import prismaDB from "@/lib/prismaDB";
-import {findUserById} from "./lib/prismaUtils/findUser";
+import {findUserById} from "@/lib/prismaUtils/findUser";
+import { findTwoFactorConfirmationByUserID} from "@/lib/prismaUtils/findTwoFactorTokens";
 import {UserRole} from "@prisma/client";
 // import { JWT } from "@auth/core/jwt"
 
@@ -58,6 +59,19 @@ export const { handlers, auth, signIn, signOut } = NextAuth({
              * */
             if(!existingUser || !existingUser?.emailVerified) {
                 return false
+            }
+            // check twoFactorConfirmation
+            if(existingUser.isTwoFactorEnabled){
+                // check if user has twoFactorConfirmation token in the database
+                const twoFactorConfirmation = await findTwoFactorConfirmationByUserID(existingUser.id)
+                if(!twoFactorConfirmation){
+                    // if not found, return false to block the user from sign-in
+                    return false
+                }
+                //delete the twoFactorConfirmation from the database to next sign-in
+                await prismaDB.twoFactorConfirmation.delete({
+                    where: {id: twoFactorConfirmation.id}
+                })
             }
             //if user exists and verifies
             return true

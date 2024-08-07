@@ -7,7 +7,7 @@ import {findUserByEmail} from "@/lib/prismaUtils/findUser";
 import {conditionalError} from "@/lib/utils";
 import {AuthActionReturnType} from "@/types";
 import {ZodCustomErrorMessages} from "@/zod";
-import { sendPasswordResetEmail} from "@/lib/email.utils";
+import { sendPasswordResetEmail} from "../lib/emailsUtils/email.utils";
 import { generatePasswordResetToken} from "@/lib/tokens";
 import {findPasswordResetTokenByToken} from "@/lib/prismaUtils/findPasswordResetTokens";
 import bcryptjs from "bcryptjs";

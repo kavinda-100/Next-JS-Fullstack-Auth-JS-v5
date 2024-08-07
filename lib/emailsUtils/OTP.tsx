@@ -1,7 +1,6 @@
 import * as React from "react";
 import {
     Body,
-    Button,
     Container,
     Head,
     Hr,
@@ -14,26 +13,32 @@ import {
 
 type EmailProps = {
     name: string;
-    OPT: number;
+    OTP: string;
     label: string;
+    description: string;
 };
 
 const DOMAIN = process.env.DOMAIN_NAME;
 
-const OTP = ({ name, OPT, label }: EmailProps) => {
+const OTP = ({ name, OTP, label, description }: EmailProps) => {
+
+    const copyOTP = async () => {
+        await navigator.clipboard.writeText(OTP.toString());
+        alert(`OTP copied to clipboard - ${OTP}`);
+    }
     return (
         <Html>
             <Head />
-            <Preview>OPT for your {label}</Preview>
+            <Preview>{label}</Preview>
             <Body style={main}>
                 <Container style={container}>
                     <Section>
                         <Text style={text}>Hi {name},</Text>
                         <Text style={text}>
-                            Your One Time (OTP) is:{" "}{OPT}
+                            Your One Time (OTP) is:{" "}<Text style={copyText} onClick={copyOTP}>{OTP}</Text>
                         </Text>
                         <Text style={text}>
-                            Please enter this OPT to change {label}.
+                            {description}
                         </Text>
                         <Hr />
                         <Text style={text}>
@@ -69,6 +74,16 @@ const text = {
     fontWeight: "300",
     color: "#404040",
     lineHeight: "26px",
+};
+
+const copyText = {
+    fontSize: "16px",
+    fontFamily:
+        "'Open Sans', 'HelveticaNeue-Light', 'Helvetica Neue Light', 'Helvetica Neue', Helvetica, Arial, 'Lucida Grande', sans-serif",
+    fontWeight: "300",
+    color: "#404040",
+    lineHeight: "26px",
+    cursor: "pointer",
 };
 
 const button = {

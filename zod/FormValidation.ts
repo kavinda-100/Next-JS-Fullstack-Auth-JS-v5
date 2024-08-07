@@ -3,6 +3,7 @@ import z from "zod"
 export const ZodLoginValidation = z.object({
   email: z.string({message : "email is required"}).email({ message: "Invalid email address" }),
   password: z.string({message : "password is required"}).min(4, {message: "password is required"}),
+    OTPCode: z.string({message: "OTP is required"}).min(6, {message: "OTP code has 6 digits"}).optional(),
 })
 
 export const ZodSignUpValidation = z.object({

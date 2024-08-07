@@ -31,6 +31,7 @@ const LoginForm = () => {
     // form state
     const [error, setError] = React.useState<string | undefined>("");
     const [success, setSuccess] = React.useState<string | undefined>("");
+    const [isTwoFactor, setIsTwoFactor] = React.useState<boolean>(false);
 
     /**
      * zodResolver is a function that takes a Zod schema and returns a resolver function that can be used with react-hook-form.
@@ -46,11 +47,15 @@ const LoginForm = () => {
         try {
             const result = await LogInAction(data)
             console.log(result)
-            if (result?.message) {
-                setError(result.message);
-            } else if (result?.success) {
+            if (result?.success) {
                 setSuccess(result.success);
                 navigateTo(DEFAULT_LOGIN_REDIRECT)
+            }
+            if(result?.twoFactor){
+                setIsTwoFactor(true);
+            }
+            if (result?.message) {
+                setError(result.message);
             }
 
         }
@@ -73,55 +78,79 @@ const LoginForm = () => {
                 <form onSubmit={formHook.handleSubmit(onSubmit)}
                 className="space-y-6">
                     <div className="space-y-4">
-                        <FormField
-                            control={formHook.control}
-                            name={"email"}
-                            render={({field, }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="email">Email</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            type={"email"}
-                                            placeholder={"example@gmail.com"}
-                                            disabled={isPending}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                </FormItem>
-                            )}
-                        />
-                        <FormField
-                            control={formHook.control}
-                            name={"password"}
-                            render={({field, }) => (
-                                <FormItem>
-                                    <FormLabel htmlFor="email">Password</FormLabel>
-                                    <FormControl>
-                                        <Input
-                                            {...field}
-                                            type={"password"}
-                                            placeholder={"********"}
-                                            disabled={isPending}
-                                        />
-                                    </FormControl>
-                                    <FormMessage />
-                                    <Button
-                                        className="px-0 font-normal"
-                                        size={"sm"}
-                                        variant={"link"}
-                                        asChild>
-                                        <Link href="/auth/reset" >Forgot Password?</Link>
-                                    </Button>
-                                </FormItem>
-                            )}
-                        />
+                        {isTwoFactor && (
+                                <FormField
+                                    control={formHook.control}
+                                    name={"OTPCode"}
+                                    render={({field, }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">OTP Code</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    placeholder={"123456"}
+                                                    disabled={isPending}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                            )
+                        }
+                        {!isTwoFactor && (
+                            <>
+                                <FormField
+                                    control={formHook.control}
+                                    name={"email"}
+                                    render={({field, }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">Email</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type={"email"}
+                                                    placeholder={"example@gmail.com"}
+                                                    disabled={isPending}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                        </FormItem>
+                                    )}
+                                />
+                                <FormField
+                                    control={formHook.control}
+                                    name={"password"}
+                                    render={({field, }) => (
+                                        <FormItem>
+                                            <FormLabel htmlFor="email">Password</FormLabel>
+                                            <FormControl>
+                                                <Input
+                                                    {...field}
+                                                    type={"password"}
+                                                    placeholder={"********"}
+                                                    disabled={isPending}
+                                                />
+                                            </FormControl>
+                                            <FormMessage />
+                                            <Button
+                                                className="px-0 font-normal"
+                                                size={"sm"}
+                                                variant={"link"}
+                                                asChild>
+                                                <Link href="/auth/reset" >Forgot Password?</Link>
+                                            </Button>
+                                        </FormItem>
+                                    )}
+                                />
+                            </>)
+                    }
 
                     </div>
 
                     <FormError message={error || urlError} />
                     <FormSuccess message={success} />
-                    <Button className="w-full" type={"submit"} disabled={isPending}>LogIn</Button>
+                    <Button className="w-full" type={"submit"} disabled={isPending}>{isTwoFactor ? "Confirm" : "LogIn"}</Button>
 
                 </form>
             </Form>
