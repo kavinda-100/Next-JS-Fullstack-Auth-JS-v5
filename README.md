@@ -22,10 +22,21 @@
 - [React Hook Form](https://react-hook-form.com/)
 - [zod](https://zod.dev/)
 
-Install the dependencies:
+> [!IMPORTANT]
+> install the Bun CLI globally to run the project.
 
+
+Windows
 ```bash
-bun install
+powershell -c "irm bun.sh/install.ps1 | iex"
+```
+MacOS & Linux
+```bash
+curl -fsSL https://bun.sh/install | bash
+```
+using npm
+```bash
+npm install -g bun
 ```
 
 Create a `.env` file in the root of the project and add the following:
@@ -57,23 +68,12 @@ DEV_MODE="development" // change to production when deploying
 > The `DATABASE_URL` is the connection string to your database.
 > use a cloud database like MongoDB Atlas.
 
+Install the dependencies:
 
-> [!IMPORTANT]
-> install the Bun CLI globally to run the project.
+```bash
+bun install
+```
 
-
-Windows
-```bash
-powershell -c "irm bun.sh/install.ps1 | iex"
-```
-MacOS & Linux
-```bash
-curl -fsSL https://bun.sh/install | bash
-```
-using npm
-```bash
-npm install -g bun
-```
 run the development server:
 
 ```bash
