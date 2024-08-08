@@ -22,6 +22,25 @@
 - [React Hook Form](https://react-hook-form.com/)
 - [zod](https://zod.dev/)
 
+
+## Project Goals and Learning Objectives
+
+This project is designed to deepen my understanding of modern web development using the latest features and best practices. The primary goals and learning objectives are:
+
+* **Master Next.js 14 and Its Latest Features:** Explore and implement the latest features of Next.js 14, including the new app router and file-based routing system.
+
+
+* **Implement Secure Authentication with Auth.js v5:** Learn to integrate Auth.js v5 to provide a secure login mechanism for the application. This includes understanding how to manage user sessions, handle authentication tokens, and protect user data.
+
+
+* **Understand Server and Client Components:** Delve into the differences between server components and client components, and learn how to leverage their capabilities effectively within the application. This will help in optimizing the performance and user experience.
+
+
+* **Protect Routes Using Middleware:** Gain proficiency in using middleware to protect routes within the application. This involves creating secure pathways that ensure only authenticated users can access certain parts of the application.
+
+
+* **Implement Role-Based Access Control:** Learn to protect content based on role-based access control (RBAC). This includes setting up different user roles and permissions, and ensuring that users can only access content and features they are authorized to use.
+
 > [!IMPORTANT]
 > install the Bun CLI globally to run the project.
 
