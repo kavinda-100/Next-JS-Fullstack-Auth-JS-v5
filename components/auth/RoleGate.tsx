@@ -2,7 +2,7 @@
 
 import {UserRole} from "@prisma/client";
 import React from "react";
-import useCurrentRole from "@/hooks/useCurrentRole";
+import {useCurrentRole}from "@/hooks/useCurrentRole";
 import FormError from "@/components/FormError";
 
 type RoleGateProps = {
